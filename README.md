@@ -1,5 +1,7 @@
 # Code Connect
 
+<img width="1519" height="1080" alt="image" src="https://github.com/user-attachments/assets/25ef40ba-3561-47b2-b111-de3a39c3b256" />
+
 Educational full-stack monorepo developed as part of the [AI-Native Software Engineering: orquestre agentes para desenvolver com método, segurança e escala](https://cursos.alura.com.br/formacao-ai-native-software-engineering) formation from [Alura](https://www.alura.com.br/).
 
 This repository follows the course curriculum while incorporating minor personal modifications and experiments on top of what was presented in the lessons.
