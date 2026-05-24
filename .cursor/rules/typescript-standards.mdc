@@ -1,0 +1,29 @@
+---
+description: TypeScript/JavaScript conventions for this project
+globs: **/*.{ts,tsx,js,jsx}
+alwaysApply: false
+---
+
+# TypeScript Standards
+
+- **API** (`apps/api`): semicolons, single quotes (Prettier), `strictNullChecks` + decorators
+- **Web** (`apps/web`): no semicolons in app code (Vite style), `verbatimModuleSyntax`, strict unused locals
+- Use explicit return types on Nest controllers/services when adding public methods
+- Prefer `import type` when importing types only (web `verbatimModuleSyntax`)
+
+```typescript
+// ✅ API — Nest injectable + controller
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+
+// ✅ Web — functional component + named hooks import
+import { useState } from 'react'
+function App() { /* ... */ }
+export default App
+
+// ❌ Avoid mixing web style (no semicolons) into API files or vice versa
+```

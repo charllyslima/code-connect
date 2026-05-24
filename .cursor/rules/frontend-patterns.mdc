@@ -1,0 +1,65 @@
+---
+description: React — Atomic Design, Tailwind, component tests
+globs: apps/web/**/*
+alwaysApply: false
+---
+
+# Frontend Patterns
+
+## Atomic Design
+
+Organize UI under `apps/web/src/components/`:
+
+| Layer     | Path        | Responsibility                          |
+| --------- | ----------- | --------------------------------------- |
+| Atoms     | `atoms/`    | Single UI primitive (Button, Input)     |
+| Molecules | `molecules/`| Small composed groups (SearchBar)       |
+| Organisms | `organisms/`| Distinct UI sections (Header, CardList) |
+| Templates | `templates/`| Page layout without real data           |
+| Pages     | `pages/`    | Route-level screens wiring organisms    |
+
+One component per folder:
+
+```
+components/atoms/Button/
+  Button.tsx
+  Button.test.tsx
+  index.ts          # re-export only
+```
+
+- ✅ Compose up the hierarchy (pages → templates → organisms → …)
+- ❌ Atoms importing organisms; cross-layer “shortcuts”
+
+## Tailwind CSS
+
+- **Styling**: Tailwind utilities only; avoid new `.css` per component
+- **Global**: `index.css` — `@import "tailwindcss"` / directives only
+- ✅ `className="flex items-center gap-2 rounded-md px-4 py-2"`
+- ❌ Inline `style={{}}` for layout/theme; ❌ component-scoped CSS files for UI
+
+## Components
+
+- Functional components; named export in file, barrel via `index.ts`
+- Props typed with `interface` or `type`; no `any`
+- Prefer composition over prop drilling; extract hooks when logic grows
+
+## Tests (mandatory)
+
+Every component **must** have a co-located test covering **essential usage**:
+
+- Renders with required props / default state
+- Primary user interaction (click, type, submit) when applicable
+- Key accessible output (role, label, text) — use Testing Library queries
+
+```tsx
+// ✅ Button.test.tsx — render + click + label
+it('calls onClick when pressed', async () => {
+  const onClick = vi.fn()
+  render(<Button onClick={onClick}>Save</Button>)
+  await userEvent.click(screen.getByRole('button', { name: /save/i }))
+  expect(onClick).toHaveBeenCalledOnce()
+})
+```
+
+- ❌ Ship a new component without its `.test.tsx`
+- ❌ Snapshot-only tests with no behavior assertion

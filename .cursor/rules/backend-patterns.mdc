@@ -1,0 +1,61 @@
+---
+description: NestJS REST API — resource-oriented HTTP
+globs: apps/api/**/*
+alwaysApply: false
+---
+
+# Backend Patterns — REST
+
+APIs must follow REST constraints and HTTP semantics. Nest structure: module → controller → service → (repository).
+
+## URLs & resources
+
+- Plural nouns: `/users`, `/posts/{id}` — not `/getUser`, `/user_list`
+- Nest: `@Controller('users')` — no trailing slash; lowercase kebab-case
+- Sub-resources: `/users/{userId}/posts`
+- Version when breaking: `/v1/users` or header `Accept-Version`
+
+## HTTP methods & status
+
+| Method  | Use              | Success codes        |
+| ------- | ---------------- | -------------------- |
+| GET     | Read (safe)      | 200, 204             |
+| POST    | Create           | 201 + `Location`     |
+| PUT     | Full replace     | 200, 204             |
+| PATCH   | Partial update   | 200                  |
+| DELETE  | Remove           | 204, 200             |
+
+- ✅ `201` + body or `Location` on create; ✅ `404` missing resource; ✅ `422`/`400` validation
+- ❌ `200` on DELETE of missing id without consistency; ❌ verbs in path (`/users/create`)
+
+## Representation
+
+- JSON request/response; `Content-Type: application/json`
+- DTOs + `class-validator` / `ValidationPipe` on input
+- Stable field names; ISO 8601 dates; never leak stack traces in prod
+
+## Stateless & errors
+
+- No server session for API auth state; use tokens if auth is added
+- Map domain errors to HTTP via Nest exceptions (`NotFoundException`, `BadRequestException`)
+- Consistent error body: `{ statusCode, message, error? }` (Nest default) or documented shape
+
+## Controllers vs services
+
+- Controller: routing, status, headers, DTO binding — no business rules
+- Service: domain logic, transactions, persistence
+
+```typescript
+// ✅ REST controller
+@Controller('users')
+export class UsersController {
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() dto: CreateUserDto) { /* ... */ }
+
+  @Get(':id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) { /* ... */ }
+}
+```
+
+- ❌ `GET /users/delete/{id}`; ❌ RPC-style `@Post('doSomething')` unless truly non-resource action (document exception)

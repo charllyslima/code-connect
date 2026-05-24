@@ -1,0 +1,39 @@
+---
+description: Test conventions — API Jest + web component tests
+globs: **/*.{spec,test}.*
+alwaysApply: false
+---
+
+# Testing
+
+## API (`apps/api`)
+
+- **Framework**: Jest + `@nestjs/testing` + supertest
+- **Unit**: `src/**/*.spec.ts` co-located
+- **E2E**: `test/**/*.e2e-spec.ts` — assert status codes, headers, JSON body
+- **Run**: `pnpm test:api`, `pnpm test:api:e2e`
+- REST: e2e must verify correct HTTP method, status, and response shape
+
+## Web (`apps/web`)
+
+- **Framework**: Vitest + React Testing Library + `@testing-library/user-event`
+- **Location**: `ComponentName.test.tsx` beside `ComponentName.tsx`
+- **Run**: `pnpm test:web` (from root, when configured)
+- **Required**: every component under `components/` has a test file before merge
+
+### Essential usage (web)
+
+Cover at minimum: render smoke, main interaction, critical text/role. Skip implementation details (class names, internal state).
+
+```tsx
+// ✅ Essential usage
+describe('Button', () => {
+  it('renders label', () => {
+    render(<Button>Save</Button>)
+    expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
+  })
+})
+```
+
+- ❌ New component without `.test.tsx`
+- ❌ Testing Tailwind class strings instead of behavior/accessibility

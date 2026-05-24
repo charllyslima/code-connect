@@ -1,0 +1,32 @@
+# Code Connect
+
+Educational pnpm monorepo: React 19 SPA + NestJS 11 REST API.
+
+## Stack
+- Monorepo: pnpm workspaces (`apps/*`)
+- Frontend: React 19, Vite 8, **Tailwind**, **Atomic Design**, Vitest + RTL
+- Backend: NestJS 11, **REST** (resource URLs, correct verbs/status)
+- Package manager: pnpm
+- Git: **Conventional Commits** (`type(scope): description`)
+
+## Structure
+```
+apps/web/src/components/{atoms|molecules|organisms|templates}/ + pages/
+apps/api/src/   # REST controllers + services + DTOs
+```
+
+## Commands (root)
+- Install: `pnpm install`
+- Dev: `pnpm dev` | `pnpm dev:web` | `pnpm dev:api`
+- Build: `pnpm build` | Lint: `pnpm lint`
+- Test: `pnpm test:api` | `pnpm test:web` (web when configured)
+
+## Conventions
+- **Web**: one folder per component; Tailwind only; every component has `.test.tsx` (essential usage)
+- **API**: plural resources, proper HTTP codes, DTOs + ValidationPipe; logic in services
+- **Commits**: `feat(web):`, `fix(api):`, `test(web):`, etc. — see `.cursor/rules/git-commits.mdc`
+
+## Agent guidelines
+- Minimal diffs; match layer (atomic / REST / commit format)
+- Run `pnpm lint` + relevant tests after changes
+- See docs/CONVENTIONS.md, docs/ARCHITECTURE.md, AGENTS.md

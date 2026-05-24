@@ -1,0 +1,32 @@
+---
+description: Core project context — stack, structure, and commands
+alwaysApply: true
+---
+
+# Project Context
+
+**Code Connect** — educational full-stack monorepo (React + NestJS).
+
+## Stack
+- **Web**: React 19, Vite 8, **Tailwind CSS**, Atomic Design, Vitest + Testing Library
+- **API**: NestJS 11, **REST** APIs, Jest + supertest, port `3000`
+- **Git**: **Conventional Commits** (`feat(web):`, `fix(api):`, …)
+
+## Structure
+```
+apps/web/src/
+  components/{atoms,molecules,organisms,templates}/
+  pages/
+apps/api/src/     # feature modules, REST controllers
+```
+
+## Commands (root)
+- `pnpm dev` / `pnpm dev:web` / `pnpm dev:api`
+- `pnpm build` / `pnpm lint`
+- `pnpm test:api` / `pnpm test:api:e2e`
+- `pnpm test:web` — web unit/component tests (add script when Vitest is set up)
+
+## Agent notes
+- New web component → folder + Tailwind + **mandatory** `.test.tsx`
+- New API endpoint → REST verbs, status codes, DTOs; test in spec/e2e
+- Commits always follow Conventional Commits (see `git-commits.mdc`)
